@@ -448,6 +448,9 @@ a:hover, a:visited, a:link, a:active {
     margin-bottom: 35px;
     display: block;
 }
+    #main-header-logo img {
+        max-width: 50%;
+    }
 
 #baner-main {
     vertical-align: top;

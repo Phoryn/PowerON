@@ -54,9 +54,32 @@ namespace PowerON
 
             app.UseMvc(routes =>
             {
+
+                routes.MapRoute(
+                    name: "StaticPages",
+                    template: "strony/{viewname}.html",
+                    defaults: new { controller = "Home", action = "StaticContent" }
+                    );
+
+                routes.MapRoute(
+                    name: "ProductDetails",
+                    template: "album-{id}.html",
+                    defaults: new { controller = "Store", action = "Details"}
+                    );
+
+                routes.MapRoute(
+                    name: "ProductList",
+                    template: "gatunki/{genrename}",
+                    defaults: new { controller = "Store", action = "List" },
+                    constraints: new { genrename = @"[\w& ]+"}
+                    );
+
+
+
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                    );
             });
         }
     }
