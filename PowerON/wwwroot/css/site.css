@@ -846,8 +846,7 @@ ul.ThreeColumnsStaticCoversList {
             z-index: -1;
         }
 
-        ul.ThreeColumnsStaticCoversList li a:hover img.album-cover {
-        }
+
 
 .manageHeader {
     margin-bottom: 30px;
@@ -995,10 +994,11 @@ div.section-header {
             }
 
 #cart-empty-message {
-    margin-top: 50px;
+    margin:50px,auto,50px,auto;
+    /*margin-top: 50px;
     margin-bottom: 50px;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: auto;*/
     text-align: center;
 }
 
@@ -1091,11 +1091,12 @@ a.button-link:visited, a.button-link:link, a.button-link:active {
     }
 
 #userdata-address-table {
-    margin-left: auto;
+    margin: 50px,auto,50px,auto;
+    /*margin-left: auto;
     margin-right: auto;
-    text-align: left;
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 50px;*/
+    text-align: left;
     border-style: none;
 }
 
@@ -1137,11 +1138,12 @@ a.button-link:visited, a.button-link:link, a.button-link:active {
     }
 
 #albumedit-address-table {
-    margin-left: auto;
+    margin: 50px,auto,50px,auto;
+    /*margin-left: auto;
     margin-right: auto;
-    text-align: left;
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 50px;*/
+    text-align: left;
     border-style: none;
 }
 
@@ -1290,8 +1292,7 @@ div.upload {
         text-decoration: none;
     }
 
-#login-header {
-}
+
 
     #login-header div {
         line-height: 40px;

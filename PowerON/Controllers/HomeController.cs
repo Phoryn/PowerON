@@ -4,14 +4,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PowerON.DAL;
 using PowerON.Models;
 
 namespace PowerON.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly StoreContext _context;
+
+        public HomeController(StoreContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
+            var genrelist = _context.Genres.ToList();
             return View();
         }
 
@@ -20,13 +29,5 @@ namespace PowerON.Controllers
 
             return View(viewname);
         }
-
-
-
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
     }
 }
