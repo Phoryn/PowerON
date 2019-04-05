@@ -1,6 +1,68 @@
-﻿@{
+﻿
+@model PowerON.ViewModel.HomeViewModel
+
+@{
     ViewBag.Title = "PowerON";
 }
 
-<h2>Index</h2>
-Główna
+<nav class="genres-horizontal">
+    <ul>
+        @foreach (var genre in Model.Genres)
+        {
+            <li>
+                <a href="@Url.Action("List","Store",new { genrename = genre.Name.ToLower() })" style="background-image: url(/images//Genre-icons/@genre.IconFilename); ">
+                    @genre.Name
+                </a>
+            </li>
+        }
+    </ul>
+    <a href="">
+        <img id="baner-main" src="~/images/banner.png" />
+    </a>
+</nav>
+
+<section>
+    <ul class="ThreeColumnsCoversList large-cover-list">
+        @foreach (var newArrival in Model.NewArrivals)
+        {
+            <li>
+                <article>
+                    <a class="addtocartlink" href="@Url.Action("AddtoCart", "Cart",new { id = newArrival.ItemId })">
+                        <img src="~/images/cart.png" />
+                    </a>
+                    <a class="productdetailslink" href="@Url.Action("Details", "Store", new { id = newArrival.ItemId})">
+                        <div class=" newFlag"></div>
+                        <img class="album-cover" src="~/images/Items/@newArrival.ImageFileName" />
+                        <h1>
+                            @newArrival.ItemName
+                        </h1>
+                    </a>
+                </article>
+            </li>
+        }
+
+    </ul>
+</section>
+
+<section>
+    <ul class="ThreeColumnsCoversList large-cover-list">
+        @foreach (var bestseller in Model.Bestsellers)
+        {
+            <li>
+                <article>
+                    <a class="addtocartlink" href="@Url.Action("AddtoCart", "Cart",new { id = bestseller.ItemId })">
+                        <img src="~/images/cart.png" />
+                    </a>
+                    <a class="productdetailslink" href="@Url.Action("Details", "Store", new { id = bestseller.ItemId})">
+                        <div class=" bestsellerFlag"></div>
+                        <img class="album-cover" src="~/images/Items/@bestseller.ImageFileName" />
+                        <h1>
+                            @bestseller.ItemName
+                        </h1>
+                    </a>
+                </article>
+            </li>
+        }
+
+    </ul>
+</section>

@@ -8,7 +8,6 @@ namespace PowerON.Models
     {
         public int ItemId { get; set; }
         public int GenreId { get; set; }
-        public string ItemTitle { get; set; }
         public string ItemName { get; set; }
         public DateTime DateAdded { get; set; }
         public string ImageFileName { get; set; }

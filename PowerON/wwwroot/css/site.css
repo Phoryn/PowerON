@@ -416,7 +416,7 @@ a:hover, a:visited, a:link, a:active {
     float: left;
     line-height: 40px;
     font-size: 14px;
-    background-image: url(../Content/Images/fb_white.png);
+    background-image: url(/images/fb_white.png);
     background-repeat: no-repeat;
     background-position: 4% 55%;
     padding-left: 40px;
@@ -454,6 +454,7 @@ a:hover, a:visited, a:link, a:active {
 
 #baner-main {
     vertical-align: top;
+    background-color: skyblue;
 }
 
 nav.genres-horizontal ul {
@@ -481,6 +482,7 @@ nav.genres-horizontal ul {
             display: block;
             height: 100%;
             padding-left: 127px;
+            background-size: 80px;
             background-repeat: no-repeat;
             background-position-x: 50px;
             background-position-y: 50%;
@@ -904,7 +906,7 @@ ul.ThreeColumnsStaticCoversList {
     }
 
 div.newFlag {
-    background-image: url(Images/new.png);
+    background-image: url(/images/new.png);
     background-repeat: no-repeat;
     display: block;
     width: 100%;
@@ -915,7 +917,7 @@ div.newFlag {
 }
 
 div.bestsellerFlag {
-    background-image: url(Images/bestseller.png);
+    background-image: url(/images/bestseller.png);
     background-repeat: no-repeat;
     display: block;
     width: 100%;
@@ -1495,4 +1497,3 @@ footer {
                 vertical-align: middle; 
                 margin-right: 30px;
             }*/
-
