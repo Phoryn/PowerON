@@ -52,33 +52,5 @@
 
     @RenderSection("ScriptsBottom", required: false)
 
-
-
-    <script>
-
-
-
-        $(window).bind("load", function)
-        {
-
-            var setupAutoComplete = function () {
-                var $input = $(this);
-
-                var options = {
-                    source: $input.attr("data-autocomplete-source"),
-                    select: function (event, ui) {
-                        $input = $(this);
-                        $input.val(ui.item.label);
-                        var $form = $input.parents("form:first");
-                        $form.submit();
-                    }
-                };
-                $input.ajaxComplete(options);
-            };
-            $("#search-filter").each(setupAutoComplete);
-
-
-        };
-    </script>
 </body>
 </html>

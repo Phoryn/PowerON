@@ -34,7 +34,7 @@ namespace PowerON.Controllers
 
         public IActionResult AlbumsSuggestions(string term)
         {
-            var albums = this._db.Items.Where(a => a.IsHidden && a.ItemName.ToLower().Contains(term.ToLower()))
+            var albums = this._db.Items.Where(a => !a.IsHidden && a.ItemName.ToLower().Contains(term.ToLower()))
                 .Take(5).Select(a => new { label = a.ItemName });
 
             return Json(albums);
