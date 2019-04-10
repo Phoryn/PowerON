@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<PowerON.Models.Item>
+@model PowerON.Models.Genre
 @{
     ViewData["Title"] = "List";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,34 +13,32 @@
     <div id="productlist-rightsection">
         <div id="breadcrumb-section">
             <img src="~/images/home-small.png" alt="Alternate Text" />
+
+            <form id="search-form">
+                <input id="search-filter" type="search" name="searchQuery"
+                       data-autocomplete-source="@Url.Action("AlbumsSuggestions","Store")"
+                       placeholder="Czego szukasz?" />
+
+                <input type="submit" value="" />
+            </form>
+
+
         </div>
-
-        <div id="productlist-section">
-            <ul class="ThreeColumnsCoversList small-cover-list">
-                @foreach (var item in Model)
-                {
-                    <li>
-                        <article>
-                            <a class="addtocartlink" href="@Url.Action("AddtoCart", "Cart", new { id = item.ItemId})">
-                                <img src="~/images/cart.png" alt="Dodaj do koszyka" />
-                            </a>
-
-                            @if (item.IsBestseller)
-                            {
-                                <div class="bestsellerFlag"></div>
-                            }
-                            <a class="productdetailslink" href="@Url.Action("Details", "Store", new { id = item.ItemId })">
-                                <h1>
-                                    @item.ItemName
-                                </h1>
-
-                            </a>\
-                        </article>
-                    </li>
-                }
-            </ul>
-        </div>
+        @await Component.InvokeAsync("ProductList", Model.Name)
 
     </div>
 </div>
+
+
+@section ScriptsBottom{
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>*@
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+}
 

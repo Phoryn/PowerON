@@ -10,7 +10,7 @@
         @foreach (var genre in Model.Genres)
         {
             <li>
-                <a href="@Url.Action("List","Store",new { genrename = genre.Name.ToLower() })" style="background-image: url(/images//Genre-icons/@genre.IconFilename); ">
+                <a href="@Url.Action("List","Store",new { genrename = genre.Name.ToLower() })" style="background-image: url(/images//Genre-icons/@genre.IconFilename); background-size: 60px; ">
                     @genre.Name
                 </a>
             </li>

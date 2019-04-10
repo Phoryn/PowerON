@@ -28,12 +28,17 @@ namespace PowerON.Controllers
         }
         public IActionResult List(string genrename)
         {
-            var genres = _db.Genres.Include("Items").Where(g => g.Name.ToUpper() == genrename.ToUpper()).Single();
-            var albums = genres.Items.ToList();
-            return View(albums);
+            var genre = _db.Genres.Include("Items").Where(g => g.Name.ToUpper() == genrename.ToUpper()).Single();
+            return View(genre);
         }
 
+        public IActionResult AlbumsSuggestions(string term)
+        {
+            var albums = this._db.Items.Where(a => a.IsHidden && a.ItemName.ToLower().Contains(term.ToLower()))
+                .Take(5).Select(a => new { label = a.ItemName });
 
+            return Json(albums);
+        }
 
 
     }

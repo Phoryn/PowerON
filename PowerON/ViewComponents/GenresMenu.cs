@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using PowerON.DAL;
+using PowerON.Infrastructure;
 using PowerON.Models;
 using System;
 using System.Collections.Generic;
@@ -25,14 +26,13 @@ namespace PowerON.ViewComponents
         public IViewComponentResult Invoke()
         {
             var genres = new List<Genre>();
-            if(! _cache.TryGetValue("GenresList", out genres))
+            if(! _cache.TryGetValue(Const.genrMenuCacheKey, out genres))
             {
                 if(genres == null)
                 {
                     genres = GetGenres();
                 }
-                //var options = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(80000));
-                _cache.Set("GenresList", genres, TimeSpan.FromSeconds(80000));
+                _cache.Set(Const.genrMenuCacheKey, genres, TimeSpan.FromMinutes(30));
             }
             return View(genres);
         }

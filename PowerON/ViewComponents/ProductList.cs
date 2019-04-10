@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PowerON.DAL;
+using PowerON.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace PowerON.ViewComponents
         {
             _context = context;
         }
-        public IViewComponentResult Invoke(string genrename)
+        public IViewComponentResult Invoke(string genre)
         {
-            var genres = _context.Genres.Include("Items").Where(g => g.Name.ToUpper() == genrename.ToUpper()).Single();
+            var genres = _context.Genres.Include("Items").Where(g => g.Name.ToUpper() == genre.ToUpper()).Single();
             var albums = genres.Items.ToList();
             return View(albums);
         }
