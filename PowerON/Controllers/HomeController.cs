@@ -41,6 +41,8 @@ namespace PowerON.Controllers
             return View(vm);
         }
 
+
+
         public IActionResult StaticContent(string viewname)
         {
 

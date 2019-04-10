@@ -1,0 +1,28 @@
+﻿@model IEnumerable<PowerON.Models.Item>
+
+<div id="productlist-section">
+    <ul class="ThreeColumnsCoversList small-cover-list">
+        @foreach (var item in Model)
+        {
+            <li>
+                <article>
+                    <a class="addtocartlink" href="@Url.Action("AddtoCart", "Cart", new { id = item.ItemId})">
+                        <img src="~/images/cart.png" alt="Dodaj do koszyka" />
+                    </a>
+
+                    @if (item.IsBestseller)
+                    {
+                        <div class="bestsellerFlag"></div>
+                    }
+                        <a class="productdetailslink" href="@Url.Action("Details", "Store", new { id = item.ItemId })">
+                            <img class="album-cover" src="~/images/Items/@item.ImageFileName" alt="Okładka płyty" />
+                            <h1>
+                                @item.ItemName
+                            </h1>
+
+                        </a>\
+                </article>
+            </li>
+        }
+    </ul>
+</div>

@@ -1,0 +1,46 @@
+﻿
+@model IEnumerable<PowerON.Models.Item>
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="productlist-content">
+
+
+    @await Component.InvokeAsync("GenresMenu")
+
+    <div id="productlist-rightsection">
+        <div id="breadcrumb-section">
+            <img src="~/images/home-small.png" alt="Alternate Text" />
+        </div>
+
+        <div id="productlist-section">
+            <ul class="ThreeColumnsCoversList small-cover-list">
+                @foreach (var item in Model)
+                {
+                    <li>
+                        <article>
+                            <a class="addtocartlink" href="@Url.Action("AddtoCart", "Cart", new { id = item.ItemId})">
+                                <img src="~/images/cart.png" alt="Dodaj do koszyka" />
+                            </a>
+
+                            @if (item.IsBestseller)
+                            {
+                                <div class="bestsellerFlag"></div>
+                            }
+                            <a class="productdetailslink" href="@Url.Action("Details", "Store", new { id = item.ItemId })">
+                                <h1>
+                                    @item.ItemName
+                                </h1>
+
+                            </a>\
+                        </article>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    </div>
+</div>
+

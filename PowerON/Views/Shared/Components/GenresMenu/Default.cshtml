@@ -1,0 +1,18 @@
+﻿@model IEnumerable<PowerON.Models.Genre>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<nav class="genres-vertical">
+    <ul>
+        @foreach (var genre in Model)
+        {
+            <li>
+                <a href="@Url.Action("List","Store", new { genrename = genre.Name.ToString() })"
+                   style="background-image: url(/images/Genre-icons/@genre.IconFilename)">
+                    @genre.Name;
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

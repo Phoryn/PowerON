@@ -1,0 +1,57 @@
+﻿@model PowerON.Models.Item
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="productlist-content">
+
+
+    @await Component.InvokeAsync("GenresMenu")
+
+    <div id="productlist-rightsection">
+        <div id="breadcrumb-section">
+            <img src="~/images/home-small.png" />
+            <a href="nav">
+                scieżka
+            </a>
+        </div>
+
+        <section id="product-details-section">
+            <div id="product-details-left">
+
+                <img src="~/images/Items/@Model.ImageFileName" />
+
+                <div id="product-details-share">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=@Context.Request.Path" target="_blank">
+                    </a>
+                </div>
+            </div>
+
+            <div id="product-details-right">
+                <div id="product-details-names">
+                    <h1>
+                        @Model.ItemName
+                    </h1>
+                </div>
+
+                <div id="product-details-price">
+                    <div>
+                        @String.Format("{0:0.##}", Model.Price)<span>PLN</span>
+                    </div>
+                    <a href="@Url.Action("AddToCart","Cart", new { id = Model.ItemId})"></a>
+                </div>
+
+                <div id="product-details-description">
+                    @Model.Description
+                </div>
+
+                <div id="product-details-info">
+                    Bezpłatna przesyłka. Realizacja w ciągu 24 godzin.
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+
