@@ -32,6 +32,16 @@ namespace PowerON.Controllers
             return View(genre);
         }
 
+        public IActionResult SearchList(string searchQuery)
+        {
+            var items = _db.Items.Where(a => (searchQuery == null ||
+                                            a.ItemName.ToLower().Contains(searchQuery.ToLower())) 
+                                            && !a.IsHidden);
+
+            return PartialView("_ProductList", items);
+            //return ViewComponent("ProductList", items);
+        }
+
         public IActionResult AlbumsSuggestions(string term)
         {
             var albums = this._db.Items.Where(a => !a.IsHidden && a.ItemName.ToLower().Contains(term.ToLower()))
