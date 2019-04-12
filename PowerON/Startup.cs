@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using PowerON.DAL;
 using PowerON.Infrastructure;
@@ -40,6 +41,14 @@ namespace PowerON
             services.AddMemoryCache();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(opts =>
+            {
+                opts.Cookie.Name = ".PowerOn";
+                opts.IdleTimeout = TimeSpan.FromSeconds(10);
+            });
+            services.AddHttpContextAccessor(); //
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +67,8 @@ namespace PowerON
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
+            
 
             app.UseMvc(routes =>
             {
