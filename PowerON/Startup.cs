@@ -46,7 +46,7 @@ namespace PowerON
             services.AddSession(opts =>
             {
                 opts.Cookie.Name = ".PowerOn";
-                opts.IdleTimeout = TimeSpan.FromSeconds(10);
+                opts.IdleTimeout = TimeSpan.FromMinutes(30);
             });
             services.AddHttpContextAccessor(); //
         }
