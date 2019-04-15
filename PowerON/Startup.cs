@@ -42,13 +42,20 @@ namespace PowerON
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
+            //session
             services.AddDistributedMemoryCache();
-            services.AddSession(opts =>
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSession(options =>
             {
-                opts.Cookie.Name = ".PowerOn";
-                opts.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.Name = ".PowerOn";
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+
             });
-            services.AddHttpContextAccessor(); //
+            services.AddHttpContextAccessor(); 
+            //session
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -57,3 +57,58 @@
 
     </div>
 </div>
+
+@section ScriptsBottom{
+
+
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $(".removeProduct").click(function () {
+
+                var recordToDelete = $(this).attr("data-id");
+
+                if (recordToDelete != '') {
+
+                    // Send post request with AJAX
+                    $.post("/Cart/RemoveFromCart", { "itemId": recordToDelete },
+                        function (response) {
+                            // Success
+                            if (response.removedItemCount == 0) {
+
+                                $('#cart-row-' + response.removeItemId).fadeOut('slow', function () {
+                                    if (response.cartItemsCount == 0) {
+                                        $("#cart-empty-message").removeClass('hidden');
+                                    }
+                                });
+                            }
+
+                            else
+                            {
+                                $('#cart-item-count-' + response.removeItemId).text(response.removedItemCount);
+                            }
+
+                            if (response.cartItemsCount == 0) {
+                                $('#cart-button-checkout').addClass('hidden');
+                                $('#total-price').addClass('invisible');
+                            }
+
+                            $('#total-price-value').text(response.cartTotal);
+                            $('#cart-header-items-count').text(response.cartItemsCount);
+
+                        });
+
+                    return false;
+                }
+            });
+
+        });
+
+    </script>
+
+
+
+
+}

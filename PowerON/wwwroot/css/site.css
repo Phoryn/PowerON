@@ -438,7 +438,7 @@ a:hover, a:visited, a:link, a:active {
         height: 42px;
         background-color: #585858;
         float: right;
-        background-image: url(../Content/Images/cart_white.png);
+        background-image: url(/images/cart_white.png);
         background-repeat: no-repeat;
         background-position: center;
     }

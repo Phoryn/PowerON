@@ -12,21 +12,21 @@ namespace PowerON.Controllers
 {
     public class CartController : Controller
     {
-        private ShoppingCartManager shoppingcartManager;
-        private ISession Session { get; set; }
         private readonly StoreContext db;
+        readonly HttpContextAccessor session = new HttpContextAccessor();
 
-        public CartController(StoreContext context, IHttpContextAccessor session)
+        public CartController(StoreContext context)
         {
-            this.Session = session.HttpContext.Session;
             this.db = context;
-            this.shoppingcartManager = new ShoppingCartManager(db, this.Session);
         }
 
         public IActionResult Index()
         {
-            var cartItems = shoppingcartManager.GetCart();
-            var cartTotalPrice = shoppingcartManager.GetCartTotalPrice();
+
+            ShoppingCartManager shoppingCartManager = new ShoppingCartManager(this.db, session);
+
+            var cartItems = shoppingCartManager.GetCart();
+            var cartTotalPrice = shoppingCartManager.GetCartTotalPrice();
 
             CartViewModel cartVM = new CartViewModel()
             {
@@ -37,11 +37,42 @@ namespace PowerON.Controllers
             return View(cartVM);
         }
 
+        [HttpGet]
         public IActionResult AddToCart(int id)
         {
-            shoppingcartManager.AddtoCart(id);
+            ShoppingCartManager shoppingCartManager = new ShoppingCartManager(this.db, session);
+
+            shoppingCartManager.AddtoCart(id);
 
             return RedirectToAction("index");
+        }
+
+        public IActionResult GetCartItemCount()
+        {
+            ShoppingCartManager shoppingCartManager = new ShoppingCartManager(this.db, session);
+
+            return Content(shoppingCartManager.GetCartItemsCouns().ToString());
+            //ViewBag["Count"] = shoppingcartManager.GetCartItemsCouns();
+            //return  shoppingcartManager.GetCartItemsCouns();
+        }
+
+        public IActionResult RemoveFromCart(int itemId)
+        {
+            ShoppingCartManager shoppingCartManager = new ShoppingCartManager(this.db, session);
+
+            int itemCount = shoppingCartManager.RemoveFromCart(itemId);
+            int cartItemsCount = shoppingCartManager.GetCartItemsCouns();
+            decimal cartTotal = shoppingCartManager.GetCartTotalPrice();
+
+            var result = new CartRemoveViewModel
+            {
+                RemoveItemId = itemId,
+                RemovedItemCount = itemCount,
+                CartTotal = cartTotal,
+                CartItemsCount = cartItemsCount
+            };
+
+            return Json(result);
         }
     }
 }

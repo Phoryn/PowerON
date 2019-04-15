@@ -50,6 +50,5 @@ namespace PowerON.Controllers
             return Json(albums);
         }
 
-
     }
 }

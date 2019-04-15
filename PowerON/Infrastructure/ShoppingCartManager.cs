@@ -4,7 +4,6 @@ using PowerON.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PowerON.Infrastructure
 {
@@ -12,12 +11,12 @@ namespace PowerON.Infrastructure
     {
         private readonly StoreContext db;
         public const string CartSessionKey = "CartData";
-        private ISession session;
+        private IHttpContextAccessor session;
 
-        public ShoppingCartManager(StoreContext db, ISession session)
+        public ShoppingCartManager(StoreContext db, IHttpContextAccessor accesor)
         {
             this.db = db;
-            this.session = session;
+            this.session = accesor;
         }
 
 
@@ -44,7 +43,7 @@ namespace PowerON.Infrastructure
                     cart.Add(newCartItem);
                 }
             }
-            session.SetObject(CartSessionKey, cart);
+            session.HttpContext.Session.SetObject<List<CartItem>>(CartSessionKey, cart);
 
         }
 
@@ -52,13 +51,13 @@ namespace PowerON.Infrastructure
         {
             List<CartItem> cart;
 
-            if(session.GetObject<List<CartItem>>(CartSessionKey) == null)
+            if(session.HttpContext.Session.GetObject<List<CartItem>>(CartSessionKey) == null)
             {
                 cart = new List<CartItem>();
             }
             else
             {
-                cart = session.GetObject<List<CartItem>>(CartSessionKey) as List<CartItem>;
+                cart = session.HttpContext.Session.GetObject<List<CartItem>>(CartSessionKey);
             }
 
             return cart;
@@ -69,22 +68,27 @@ namespace PowerON.Infrastructure
             var cart = this.GetCart();
 
             var cartItem = cart.Find(c => c.Item.ItemId == itemId);
+            var index = cart.IndexOf(cartItem);
 
-            if(cartItem != null)
+            if (cartItem != null)
             {
                 if (cartItem.Quantity > 1)
                 {
                     cartItem.Quantity--;
+                    cart[index] = cartItem;
+                    session.HttpContext.Session.SetObject<List<CartItem>>(CartSessionKey, cart);
                     return cartItem.Quantity;
+                    
+
                 }
                 else
                     cart.Remove(cartItem);
             }
+            session.HttpContext.Session.SetObject<List<CartItem>>(CartSessionKey, cart);
 
             return 0;
         }
         
-
         public decimal GetCartTotalPrice()
         {
             var cart = this.GetCart();
@@ -96,8 +100,7 @@ namespace PowerON.Infrastructure
             var cart = this.GetCart();
             return cart.Sum(c => c.Quantity);
         }
-
-
+        
         public Order CreateOrder(Order newOrder, string userId)
         {
             var cart = this.GetCart();
@@ -135,7 +138,7 @@ namespace PowerON.Infrastructure
 
         public void EmptyCart()
         {
-            session.SetObject(CartSessionKey, null);
+            session.HttpContext.Session.SetObject<List<CartItem>>(CartSessionKey, null);
         }
     }
 }
