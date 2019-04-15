@@ -18,8 +18,8 @@
                 Znajdź mnie na Facebook`u
             </a>
 
-            <a id="cart-header-link">
-                KOSZYK ()
+            <a id="cart-header-link" href="@Url.Action("Index", "Cart")"> 
+                KOSZYK (<span id="cart-header-items-count">@await Component.InvokeAsync("CartCount")</span>)
                 <span id="cart-header-logo"></span>
             </a>
 
