@@ -1,0 +1,35 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div id="productlist-content">
+
+
+    @await Component.InvokeAsync("GenresMenu")
+
+    <div id="productlist-rightsection">
+        <div id="breadcrumb-section">
+            <img src="~/images/home-small.png" />
+        </div>
+        <section class="content-section">
+            <div class="section-header" style="margin-bottom: 0px;">
+                <h1>
+                    @RenderSection("SectionTitle", required: false)
+                </h1>
+
+            </div>
+
+            @RenderBody()
+
+        </section>
+    </div>
+</div>
+
+
+@section ScriptsBottom{
+
+    @RenderSection("ScriptsBottom", required: false)
+}
