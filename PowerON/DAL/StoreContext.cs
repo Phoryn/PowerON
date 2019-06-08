@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PowerON.Models;
 using System;
 
 namespace PowerON.DAL
 {
-    public class StoreContext : DbContext
+    public class StoreContext : IdentityDbContext
     {
-        public StoreContext(DbContextOptions options) : base(options)
+        public StoreContext(DbContextOptions<StoreContext> options) 
+            : base(options)
         {
 
         }
@@ -20,6 +23,8 @@ namespace PowerON.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Genre>().HasData(
                 new { GenreId = 1, Name = "Komputery", IconFilename = "komputery.png" },
                 new { GenreId = 2, Name = "Monitory", IconFilename = "monitory.png" },
