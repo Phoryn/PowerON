@@ -27,7 +27,7 @@
             <tr>
                 <td>@Html.LabelFor(o => o.Password, "Hasło:")</td>
                 <td>
-                    @Html.TextBoxFor(o => o.Password)
+                    @Html.PasswordFor(o => o.Password)
                     <div class="login-validation-message">
                         @Html.ValidationMessageFor(o => o.Password)
                     </div>
