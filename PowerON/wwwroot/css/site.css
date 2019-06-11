@@ -1308,7 +1308,7 @@ div.upload {
 
 
 #FacebookLoginButton {
-    background-image: url(Images/fb-login.png);
+    background-image: url(/images/fb-login.png);
     background-repeat: no-repeat;
     background-size: 100%;
     width: 200px;

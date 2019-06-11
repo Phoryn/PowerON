@@ -48,9 +48,20 @@
 
 
     }
-    <div style="text-align:center;">
-        <a href="@Url.Action("Register")">Nie mam jeszcze konta</a>
-    </div>
+        <div style="text-align:center;">
+            <a href="@Url.Action("Register")">Nie mam jeszcze konta</a>
+
+
+            @using (Html.BeginForm("SignIn", "Account", new { provider = ViewBag.ReturnUrl }))
+            {
+
+                @Html.AntiForgeryToken()
+                <button type="submit" id="FacebookLoginButton" value="Facebook" name="provider" asp-action="SignIn" title="Zaloguj się używając konta Facebook"></button>
+            }
+
+
+            </div>
+
 </div>
 
 @section ScriptsBottom{

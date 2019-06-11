@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\Items\" />
   </ItemGroup>
+
   <!--<configuration>
   <system.webServer>
     <modules runAllManagedModulesForAllRequests="true">

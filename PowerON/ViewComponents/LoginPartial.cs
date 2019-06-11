@@ -15,8 +15,9 @@ namespace PowerON.ViewComponents
         {
             _context = context;
         }
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string ReturnUrl)
         {
+            ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
     }
