@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -41,8 +43,18 @@ namespace PowerON
 
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<StoreContext>();
             services.AddMemoryCache();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+
+            services.AddAuthentication().
+                AddFacebook(options =>
+            {
+                options.AppId = "637396096744159";
+                options.AppSecret = "99b00bc0e2f913a82214ff0c3e16bc94";
+                //options.Scope.Add("public_profile");
+                //options.Fields.Add("name");
+                //options.AuthorizationEndpoint = "Facebook";
+
+            });
 
             //session
             services.AddDistributedMemoryCache();
@@ -52,12 +64,17 @@ namespace PowerON
                 options.Cookie.Name = ".PowerOn";
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
-                // Make the session cookie essential
                 options.Cookie.IsEssential = true;
 
             });
-            services.AddHttpContextAccessor(); 
+            services.AddHttpContextAccessor();
             //session
+
+            services.AddMvc(options => {
+                options.SslPort = 44300;
+                options.Filters.Add(new RequireHttpsAttribute());
+            }
+).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,11 +90,17 @@ namespace PowerON
                 app.UseHsts();
             }
 
+
+
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
+
+
+
             app.UseMvc(routes =>
             {
 

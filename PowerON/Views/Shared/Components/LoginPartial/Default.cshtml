@@ -1,11 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> signInManager;
 
 <div id="login-header">
-    @if (User.Identity.IsAuthenticated)
+    @if (signInManager.IsSignedIn(User))
     {
         using (Html.BeginForm("Logoff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
         {
-            @Html.AntiForgeryToken()
+            //@Html.AntiForgeryToken()
 
             <div>
                 @Html.ActionLink(User.Identity.Name, "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PowerON.DAL;
+using PowerON.Models;
 using PowerON.ViewModel;
 
 namespace PowerON.Controllers
@@ -37,10 +41,19 @@ namespace PowerON.Controllers
             if (ModelState.IsValid)
             {
 
-                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await signInManager.PasswordSignInAsync(model.Email, 
+                                                            model.Password, model.RememberMe, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
-                    return RedirectToLocal(returnUrl);
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
                 }
                 else if (result.IsLockedOut)
                 {
@@ -99,9 +112,86 @@ namespace PowerON.Controllers
 
         }
 
+        public IActionResult SignIn(string provider, string returnUrl)
+        {
+
+            //return Challenge(new AuthenticationProperties { RedirectUri = "account/facebook" }, provider);
+            //return new ChallengeResult(provider, new AuthenticationProperties());
+            var properties = signInManager.ConfigureExternalAuthenticationProperties("Facebook", Url.Action("ExternalLoginCallback", "Account", new { returnUrl = returnUrl}));
+            return Challenge(properties, "Facebook");
+
+            //return RedirectToAction("Facebook", "Account", new { returnUrl = returnUrl });
+        }
 
 
-        
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
+            //info.Principal //the IPrincipal with the claims from facebook
+            //info.ProviderKey //an unique identifier from Facebook for the user that just signed in
+            //info.LoginProvider //a string with the external login provider name, in this case Facebook
+            
+            //to sign the user in if there's a local account associated to the login provider
+            var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            //result.Succeeded; //will be false if there's no local associated account 
+
+            if (result.Succeeded)
+            {
+                return RedirectToLocal(returnUrl);
+
+            }
+            else
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                    UserData = new UserData { Email = info.Principal.FindFirstValue(ClaimTypes.Email) }
+                };
+                var registrationResult = await userManager.CreateAsync(user);
+                if (registrationResult.Succeeded)
+                {
+                    registrationResult = await userManager.AddLoginAsync(user, info);
+                    if (registrationResult.Succeeded)
+                    {
+                        await signInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                        throw new Exception("Duda Błąd! External provider assocation error");
+                }
+                else
+                    throw new Exception("Duda błąd! Registration error");
+            }
+            
+
+            //to associate a local user account to an external login provider
+            //await userManager.AddLoginAsync(aUserYoullHaveToCreate, info);        
+            /*return Redirect("~/");*/
+        }
+
+
+
+        //public async  Task<IActionResult> Facebook(string returnUrl)
+        //{
+        //    var result = await HttpContext.AuthenticateAsync(TemporaryAuthenticationDefaults.AuthenticationScheme);
+        //    if (!result.Succeeded)
+        //    {
+        //        return RedirectToAction("SignIn");
+        //    }
+
+        //    var username = result.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var username2 = result.Principal.FindFirstValue(ClaimTypes.Name);
+
+            
+
+        //    var result2 = signInManager.ExternalLoginSignInAsync(username2, username, isPersistent: false);
+
+
+        //    return RedirectToLocal(returnUrl);
+
+        //}
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
