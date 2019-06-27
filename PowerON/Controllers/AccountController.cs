@@ -15,14 +15,17 @@ namespace PowerON.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly StoreContext _db;
 
-        public AccountController(UserManager<IdentityUser> userManager,
-                                SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager,
+                                SignInManager<ApplicationUser> signInManager,
+                                StoreContext context)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this._db = context;
         }
 
 
@@ -92,11 +95,12 @@ namespace PowerON.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email};
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email};
                 var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -146,7 +150,8 @@ namespace PowerON.Controllers
                 {
                     UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
                     Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                    UserData = new UserData { Email = info.Principal.FindFirstValue(ClaimTypes.Email) }
+
+                    //UserData = new UserData { Email = info.Principal.FindFirstValue(ClaimTypes.Email) }
                 };
                 var registrationResult = await userManager.CreateAsync(user);
                 if (registrationResult.Succeeded)
@@ -169,30 +174,7 @@ namespace PowerON.Controllers
             //await userManager.AddLoginAsync(aUserYoullHaveToCreate, info);        
             /*return Redirect("~/");*/
         }
-
-
-
-        //public async  Task<IActionResult> Facebook(string returnUrl)
-        //{
-        //    var result = await HttpContext.AuthenticateAsync(TemporaryAuthenticationDefaults.AuthenticationScheme);
-        //    if (!result.Succeeded)
-        //    {
-        //        return RedirectToAction("SignIn");
-        //    }
-
-        //    var username = result.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var username2 = result.Principal.FindFirstValue(ClaimTypes.Name);
-
-            
-
-        //    var result2 = signInManager.ExternalLoginSignInAsync(username2, username, isPersistent: false);
-
-
-        //    return RedirectToLocal(returnUrl);
-
-        //}
-
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> LogOff()

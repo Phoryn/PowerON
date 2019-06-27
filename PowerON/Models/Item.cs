@@ -6,6 +6,7 @@ namespace PowerON.Models
 {
     public class Item
     {
+
         public int ItemId { get; set; }
         public int GenreId { get; set; }
         public string ItemName { get; set; }

@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using PowerON.DAL;
 using PowerON.Infrastructure;
+using PowerON.Models;
 
 namespace PowerON
 {
@@ -41,7 +42,8 @@ namespace PowerON
             services.AddDbContext<StoreContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("StoreDatabase")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<StoreContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<StoreContext>();
+
             services.AddMemoryCache();
 
 
@@ -63,8 +65,8 @@ namespace PowerON
             {
                 options.Cookie.Name = ".PowerOn";
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
+                //options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = false;
 
             });
             services.AddHttpContextAccessor();

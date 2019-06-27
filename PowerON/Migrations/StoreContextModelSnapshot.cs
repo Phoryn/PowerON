@@ -63,57 +63,6 @@ namespace PowerON.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -180,6 +129,65 @@ namespace PowerON.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("PowerON.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("CodeAndCity");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
+                });
+
             modelBuilder.Entity("PowerON.Models.Genre", b =>
                 {
                     b.Property<int>("GenreId")
@@ -208,25 +216,25 @@ namespace PowerON.Migrations
                         new
                         {
                             GenreId = 2,
-                            IconFilename = "monitory.png",
+                            IconFilename = "komputery.png",
                             Name = "Monitory"
                         },
                         new
                         {
                             GenreId = 3,
-                            IconFilename = "telefony.png",
+                            IconFilename = "komputery.png",
                             Name = "Telefony"
                         },
                         new
                         {
                             GenreId = 4,
-                            IconFilename = "myszki.png",
+                            IconFilename = "komputery.png",
                             Name = "Myszki"
                         },
                         new
                         {
                             GenreId = 5,
-                            IconFilename = "klawiatury.png",
+                            IconFilename = "komputery.png",
                             Name = "Klawiatury"
                         });
                 });
@@ -264,7 +272,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 1,
-                            DateAdded = new DateTime(2019, 6, 8, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description",
                             GenreId = 1,
                             ImageFileName = "1.png",
@@ -276,10 +284,10 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 2,
-                            DateAdded = new DateTime(2019, 6, 8, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description1",
                             GenreId = 1,
-                            ImageFileName = "2.png",
+                            ImageFileName = "1.png",
                             IsBestseller = true,
                             IsHidden = false,
                             ItemName = "ItemNAme coś tam1",
@@ -288,10 +296,10 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 3,
-                            DateAdded = new DateTime(2019, 6, 8, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description2",
                             GenreId = 2,
-                            ImageFileName = "3.png",
+                            ImageFileName = "1.png",
                             IsBestseller = false,
                             IsHidden = false,
                             ItemName = "ItemNAme coś tam2",
@@ -300,10 +308,10 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 4,
-                            DateAdded = new DateTime(2019, 6, 8, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description3",
                             GenreId = 2,
-                            ImageFileName = "4.png",
+                            ImageFileName = "1.png",
                             IsBestseller = false,
                             IsHidden = false,
                             ItemName = "ItemNAme coś tam3",
@@ -317,7 +325,11 @@ namespace PowerON.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(150);
+
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<string>("CodeAndCity")
                         .IsRequired()
@@ -327,22 +339,31 @@ namespace PowerON.Migrations
 
                     b.Property<DateTime>("DateCreated");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
                     b.Property<string>("FirstName")
-                        .HasMaxLength(150);
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<string>("LastNAme")
+                        .IsRequired()
                         .HasMaxLength(150);
 
                     b.Property<int>("OrderState");
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(9,2)");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("OrderId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Orders");
                 });
@@ -383,7 +404,7 @@ namespace PowerON.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("PowerON.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -391,7 +412,7 @@ namespace PowerON.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("PowerON.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -404,7 +425,7 @@ namespace PowerON.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("PowerON.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -412,7 +433,7 @@ namespace PowerON.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("PowerON.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -424,6 +445,13 @@ namespace PowerON.Migrations
                         .WithMany("Items")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("PowerON.Models.Order", b =>
+                {
+                    b.HasOne("PowerON.Models.ApplicationUser")
+                        .WithMany("Orders")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("PowerON.Models.OrderItem", b =>
