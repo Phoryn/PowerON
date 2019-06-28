@@ -28,6 +28,8 @@ namespace PowerON.Controllers
         //private IMailService mailService;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
+
+
         public ManageController(SignInManager<ApplicationUser> signInManager,
                                 UserManager<ApplicationUser> userManager
                                 //IMailService mailService,
@@ -38,11 +40,6 @@ namespace PowerON.Controllers
             this._userManager = userManager;
         }
 
-
-
-
-
-        //
         public enum ManageMessageId
         {
             ChangePasswordSuccess,
@@ -52,28 +49,18 @@ namespace PowerON.Controllers
             Error
         }
 
-        private bool HasPassword()
-        {
-            var user = _userManager.FindByIdAsync(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (user != null)
-            {
-                return user.Result.PasswordHash != null;
-            }
-            return false;
-        }
-        //
 
-
-        // GET: Manage
+        
+        /////////////////////////////////
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             //var z = JsonConvert.DeserializeObject(TempData["ViewData"].ToString());
-            
+
 
             if (TempData["error"] != null)
             {
                 var z = (Array)TempData["error"];
-                foreach(var x in z)
+                foreach (var x in z)
                 {
                     ViewData.ModelState.AddModelError("password-error", x.ToString());
                 }
@@ -135,13 +122,18 @@ namespace PowerON.Controllers
 
                 var result = await _userManager.UpdateAsync(user);
 
-                AddErrors(result);
+
+
+                 AddErrors(result);
+
+                
+
             }
 
-            if (!ModelState.IsValid)
+            if (TempData["error"] != null)
             {
                 //TempDataExtend.Put(TempData, "ViewData", ViewData);
-                TempData["ViewData"] = ViewData;
+                //TempData.Keep("error");
                 return RedirectToAction("Index");
             }
 
@@ -173,18 +165,9 @@ namespace PowerON.Controllers
 
             AddErrors(result);
             // In case we have login errors
-            if (!ModelState.IsValid)
+            if (TempData["error"] != null)
             {
-                List<string> list = new List<string>();
-                foreach (var modelstate in ViewData.ModelState.Values)
-                {
-                    foreach(var error in modelstate.Errors)
-                    {
-                        list.Add(error.ErrorMessage);
-                    }
-                }
-                TempData["error"] = list;
-                TempData.Keep("error");
+                //TempData.Keep("error");
                 return RedirectToAction("Index");
             }
 
@@ -219,9 +202,9 @@ namespace PowerON.Controllers
                 }
                 AddErrors(result);
 
-                if (!ModelState.IsValid)
+                if (TempData["error"] != null)
                 {
-                    TempData["ViewData"] = ViewData;
+                    //TempData.Keep("error");
                     return RedirectToAction("Index");
                 }
             }
@@ -229,34 +212,6 @@ namespace PowerON.Controllers
             var message = ManageMessageId.SetPasswordSuccess;
             return RedirectToAction("Index", new { Message = message });
         }
-
-
-
-        // Used for XSRF protection when adding external logins
-        private const string XsrfKey = "XsrfId";
-
-        public async Task<ActionResult> LinkLoginCallback()
-        {
-            var user = await _userManager.FindByIdAsync(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            
-            var loginInfo = _signInManager.GetExternalLoginInfoAsync().Result;
-            if (loginInfo == null)
-            {
-                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
-            }
-
-            var result = await _userManager.AddLoginAsync(user, loginInfo);
-            return result.Succeeded ? RedirectToAction("Index", new { Message = ManageMessageId.LinkSuccess }) : RedirectToAction("Index", new { Message = ManageMessageId.Error });
-        }
-
-
-        public ActionResult LinkLogin(string returnUrl)
-        {
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", Url.Action("LinkLoginCallback", "Manage", new { returnUrl = returnUrl }));
-            return Challenge(properties, "Facebook");
-        }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -279,17 +234,55 @@ namespace PowerON.Controllers
             }
             return RedirectToAction("Index", new { Message = message });
         }
+        
+        public ActionResult LinkLogin(string returnUrl)
+        {
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", Url.Action("LinkLoginCallback", "Manage", new { returnUrl = returnUrl }));
+            return Challenge(properties, "Facebook");
+        }
+        /////////////////////////////////
 
 
 
+        public async Task<ActionResult> LinkLoginCallback()
+        {
+            var user = await _userManager.FindByIdAsync(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+            var loginInfo = _signInManager.GetExternalLoginInfoAsync().Result;
+            if (loginInfo == null)
+            {
+                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+            }
+
+            var result = await _userManager.AddLoginAsync(user, loginInfo);
+            return result.Succeeded ? RedirectToAction("Index", new { Message = ManageMessageId.LinkSuccess }) : RedirectToAction("Index", new { Message = ManageMessageId.Error });
+        }
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors)
+            if (result.Succeeded == false)
             {
-                ModelState.AddModelError("password-error", error.Description);
-            }
-        }
+                List<string> list = new List<string>();
 
+                foreach (var error in result.Errors)
+                {
+
+                    list.Add(error.Description);
+                }
+                TempData["error"] = list;
+            }
+            //TempData.Keep("error");
+
+        }
+        private bool HasPassword()
+        {
+            var user = _userManager.FindByIdAsync(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (user != null)
+            {
+                return user.Result.PasswordHash != null;
+            }
+            return false;
+        }
         private async Task SignInAsync(ApplicationUser user, bool isPersistent)
         {
             await _signInManager.SignOutAsync();
