@@ -32,13 +32,15 @@
                         {
                             Html.HiddenFor(o => order.OrderId);
 
-                            <div class="orderstateddl">
+                                           <div class="orderstateddl">
 
-                                @{
-                                    Html.GetEnumSelectList<PowerON.Models.OrderState>();
-                                }
+                                               @{
+                                                   @Html.DropDownListFor(r => order.OrderState, 
+                                                                        Html.GetEnumSelectList(typeof(PowerON.Models.OrderState)), 
+                                                                        new { @class = "orderstateddl" })
+                                               }
 
-                            </div>
+                                           </div>
                         }
                     }
                     else
@@ -107,6 +109,7 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
 <script>
+
     $(".orderstateddl").on('change', function (e) {
 
         var f = $(this.form);

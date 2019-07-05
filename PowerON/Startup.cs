@@ -43,7 +43,11 @@ namespace PowerON
                 options.UseSqlServer(Configuration.GetConnectionString("StoreDatabase")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddDefaultTokenProviders()
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<StoreContext>();
+
+            
 
             services.AddMemoryCache();
 
@@ -81,7 +85,10 @@ namespace PowerON
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            IServiceProvider service,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -92,7 +99,6 @@ namespace PowerON
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
             
 
 
@@ -133,6 +139,7 @@ namespace PowerON
                     template: "{controller=Home}/{action=Index}/{id?}"
                     );
             });
+            ApplicationRole.CreateUserRoles(service).Wait();
         }
 
 

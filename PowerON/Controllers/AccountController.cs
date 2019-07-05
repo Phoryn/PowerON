@@ -46,7 +46,7 @@ namespace PowerON.Controllers
 
                 var result = await signInManager.PasswordSignInAsync(model.Email, 
                                                             model.Password, model.RememberMe, lockoutOnFailure: false);
-
+                
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(returnUrl))

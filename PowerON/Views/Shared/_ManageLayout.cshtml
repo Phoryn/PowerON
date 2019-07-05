@@ -36,7 +36,7 @@
             <a class="manageLink" href="@Url.Action("Index", "Manage")">
                 Twoje dane
             </a>
-            <a class="manageLink" href="@Url.Action("OrdersList","Manage")" style="width: 100px">
+            <a class="manageLink" href="@Url.Action("OrdersList","Manage")">
                 Zamówienia
             </a>
             @if (@User.IsInRole("Admin"))
@@ -47,13 +47,11 @@
                 <a class="manageLink" href="@Url.Content("~/hangfire")">
                     Jobs
                 </a>
-                <a class="manageLink" href="@Url.Content("~/elmah")">
+                <a class="manageLink" href="@Url.Content("~/elmah")"  style="width: 100px">
                     Logi
                 </a>
             }
-            <a class="manageLink" href="@Url.Action("OrdersList", "Manage")" style="width: 100px">
-                Zamówienia
-            </a>
+
 
             <a id="cart-header-link" href="@Url.Action("Index", "Cart")">
                 KOSZYK (<span id="cart-header-items-count">@await Component.InvokeAsync("CartCount")</span>)

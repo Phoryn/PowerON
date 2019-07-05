@@ -304,8 +304,11 @@ namespace PowerON.Controllers
 
             if (isAdmin)
             {
-                userOrders = _db.Orders.Include("OrderItems").
-                    OrderByDescending(o => o.DateCreated).ToArray();
+                userOrders = _db.Orders.
+                    Include(z => z.OrderItems).ThenInclude(w => w.Item).
+                    OrderByDescending(x => x.DateCreated).ToArray();
+
+  
             }
             else
             {
@@ -313,16 +316,19 @@ namespace PowerON.Controllers
                 //userOrders = _db.Orders.Where(o => o.UserId == userdId).Include("OrderItems").
                 //    OrderByDescending(o => o.DateCreated).ToArray();
                 userOrders = _db.Orders.Where(o => o.UserId == userdId).
-                    Include(z => z.OrderItems).ThenInclude(w => w.Item).ToArray();
+                    Include(z => z.OrderItems).ThenInclude(w => w.Item).
+                    OrderByDescending(x => x.DateCreated).ToArray();
             }
             return View(userOrders);
 
         }
 
-        //[HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public OrderState ChangeOrderState(Order order)
         {
+
+
             Order orderToModify = _db.Orders.Find(order.OrderId);
             orderToModify.OrderState = order.OrderState;
             _db.SaveChanges();

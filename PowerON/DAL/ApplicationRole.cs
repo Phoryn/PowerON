@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace PowerON.DAL
 {
-    public class ApplicationRole : IdentityRole
+    public static class ApplicationRole 
     {
-        private async Task CreateRoles(IServiceProvider serviceProvider)
+        public static async Task CreateUserRoles(IServiceProvider serviceProvider)
         {
             //initializing custom roles 
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -38,16 +38,17 @@ namespace PowerON.DAL
                 //Here you could create the super admin who will maintain the web app
                 var poweruser = new ApplicationUser
                 {
-                    UserName = "Admin",
-                    Email = "admin@email.com",
+                    
+                    UserName = "admin@duda.com",
+                    Email = "admin@duda.com",
                 };
-                string adminPassword = "p@$$w0rd";
+                string adminPassword = "P@ssw0rd";
 
                 var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
                 if (createPowerUser.Succeeded)
                 {
                     //here we tie the new user to the role
-                    await UserManager.AddToRoleAsync(poweruser, "Admin");
+                    var result = await UserManager.AddToRoleAsync(poweruser, "Admin");
 
                 }
             }
