@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PowerON.DAL;
 
 namespace PowerON.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20190704193421_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -270,7 +272,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 1,
-                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description",
                             GenreId = 1,
                             ImageFileName = "1.png",
@@ -282,7 +284,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 2,
-                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description1",
                             GenreId = 1,
                             ImageFileName = "1.png",
@@ -294,7 +296,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 3,
-                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description2",
                             GenreId = 2,
                             ImageFileName = "1.png",
@@ -306,7 +308,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 4,
-                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description3",
                             GenreId = 2,
                             ImageFileName = "1.png",

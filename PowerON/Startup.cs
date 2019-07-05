@@ -42,7 +42,8 @@ namespace PowerON
             services.AddDbContext<StoreContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("StoreDatabase")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<StoreContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<StoreContext>();
 
             services.AddMemoryCache();
 
@@ -92,7 +93,7 @@ namespace PowerON
                 app.UseHsts();
             }
 
-
+            
 
 
             app.UseHttpsRedirection();

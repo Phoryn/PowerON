@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PowerON.Models;
@@ -8,12 +9,12 @@ namespace PowerON.DAL
 {
     public class StoreContext : IdentityDbContext<ApplicationUser>
     {
-        public StoreContext(DbContextOptions<StoreContext> options) 
+        public StoreContext(DbContextOptions<StoreContext> options)
             : base(options)
         {
 
         }
-        public DbSet<Item> Items{get;set;}
+        public DbSet<Item> Items { get; set; }
 
         public DbSet<Genre> Genres { get; set; }
 
@@ -43,12 +44,9 @@ namespace PowerON.DAL
                 new { ItemId = 4, ItemTitle = "Komputer Sonic Item Title3", Price = 77m, ItemName = "ItemNAme coś tam3", Description = "Najlepszy bo Description3", DateAdded = DateTime.Now.Date, ImageFileName = "1.png", IsBestseller = false, GenreId = 2, IsHidden = false }
                 );
 
-            //modelBuilder.Entity<ApplicationUser>()
-            //   .HasOne(a => a.UserData)
-            //   .WithOne(b => b.ApplicationUser)
-            //   .HasForeignKey<UserData>(b => b.ReferenceToUser);
-
 
         }
+
+
     }
 }

@@ -10,7 +10,7 @@ namespace PowerON.Infrastructure
     public class ShoppingCartManager
     {
         private readonly StoreContext db;
-        public const string CartSessionKey = "CartData";
+        private const string CartSessionKey = "CartData";
         private IHttpContextAccessor session;
 
         public ShoppingCartManager(StoreContext db, IHttpContextAccessor accesor)
@@ -106,7 +106,7 @@ namespace PowerON.Infrastructure
             var cart = this.GetCart();
 
             newOrder.DateCreated = DateTime.Now;
-            //newOrder.UserId = userId;
+            newOrder.UserId = userId;
 
             this.db.Orders.Add(newOrder);
 
@@ -119,7 +119,7 @@ namespace PowerON.Infrastructure
             {
                 var newOrderItem = new OrderItem()
                 {
-                    AlbumId = cartItem.Item.ItemId,
+                    ItemId = cartItem.Item.ItemId,
                     Quantity = cartItem.Quantity,
                     UnitPrice = cartItem.Item.Price
                 };

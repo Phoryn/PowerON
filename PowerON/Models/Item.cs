@@ -6,8 +6,9 @@ namespace PowerON.Models
 {
     public class Item
     {
-
+        //[Key]
         public int ItemId { get; set; }
+        //[ForeignKey("Genre")]
         public int GenreId { get; set; }
         public string ItemName { get; set; }
         public DateTime DateAdded { get; set; }
@@ -20,5 +21,6 @@ namespace PowerON.Models
         public bool IsHidden { get; set; }
 
         public virtual Genre Genre { get; set;  }
+        //public OrderItem OrderItem { get; set; }
     }
 } 

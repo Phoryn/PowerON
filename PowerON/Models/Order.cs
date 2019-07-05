@@ -9,8 +9,10 @@ namespace PowerON.Models
 {
     public class Order
     {
+        //[Key]
         public int OrderId { get; set; }
 
+        //[ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
 
         [Required(ErrorMessage = "Musisz wprowadzić imię")]
@@ -19,7 +21,7 @@ namespace PowerON.Models
 
         [Required(ErrorMessage = "Musisz wprowadzć nazwisko")]
         [StringLength(150)]
-        public string LastNAme { get; set; }
+        public string LastName { get; set; }
 
         [Required(ErrorMessage = "Nie wprowadzono adresu")]
         [StringLength(150)]
@@ -50,6 +52,8 @@ namespace PowerON.Models
         public decimal TotalPrice { get; set; }
 
         public List<OrderItem> OrderItems { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
 
     }
 

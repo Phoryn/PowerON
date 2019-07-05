@@ -52,11 +52,11 @@
             <a href="@Url.Action("Register")">Nie mam jeszcze konta</a>
 
 
-            @using (Html.BeginForm("SignIn", "Account", new { provider = ViewBag.ReturnUrl }))
+            @using (Html.BeginForm("SignIn", "Account", new { returnUrl = ViewBag.ReturnUrl,  }))
             {
 
                 @Html.AntiForgeryToken()
-                <button type="submit" id="FacebookLoginButton" value="Facebook" name="provider" asp-action="SignIn" title="Zaloguj się używając konta Facebook"></button>
+                <button type="submit" id="FacebookLoginButton" value="Facebook" name="provider" title="Zaloguj się używając konta Facebook"></button>
             }
 
 

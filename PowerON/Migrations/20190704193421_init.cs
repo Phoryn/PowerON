@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PowerON.Migrations
 {
-    public partial class Initializer : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,8 +59,7 @@ namespace PowerON.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    IconFilename = table.Column<string>(nullable: true),
-                    TestColumnDuda = table.Column<string>(nullable: true)
+                    IconFilename = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,7 +180,7 @@ namespace PowerON.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(maxLength: 100, nullable: false),
-                    LastNAme = table.Column<string>(maxLength: 150, nullable: false),
+                    LastName = table.Column<string>(maxLength: 150, nullable: false),
                     Address = table.Column<string>(maxLength: 150, nullable: false),
                     CodeAndCity = table.Column<string>(maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(maxLength: 20, nullable: false),
@@ -189,15 +188,14 @@ namespace PowerON.Migrations
                     Comment = table.Column<string>(nullable: true),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     OrderState = table.Column<int>(nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(9,2)", nullable: false),
-                    ApplicationUserId = table.Column<string>(nullable: true)
+                    TotalPrice = table.Column<decimal>(type: "decimal(9,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_Orders_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -236,10 +234,9 @@ namespace PowerON.Migrations
                     OrderItemId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     OrderId = table.Column<int>(nullable: false),
-                    AlbumId = table.Column<int>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(9,2)", nullable: false),
-                    ItemId = table.Column<int>(nullable: true)
+                    ItemId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,7 +246,7 @@ namespace PowerON.Migrations
                         column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "ItemId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
@@ -260,14 +257,14 @@ namespace PowerON.Migrations
 
             migrationBuilder.InsertData(
                 table: "Genres",
-                columns: new[] { "GenreId", "Description", "IconFilename", "Name", "TestColumnDuda" },
+                columns: new[] { "GenreId", "Description", "IconFilename", "Name" },
                 values: new object[,]
                 {
-                    { 1, null, "komputery.png", "Komputery", null },
-                    { 2, null, "komputery.png", "Monitory", null },
-                    { 3, null, "komputery.png", "Telefony", null },
-                    { 4, null, "komputery.png", "Myszki", null },
-                    { 5, null, "komputery.png", "Klawiatury", null }
+                    { 1, null, "komputery.png", "Komputery" },
+                    { 2, null, "komputery.png", "Monitory" },
+                    { 3, null, "komputery.png", "Telefony" },
+                    { 4, null, "komputery.png", "Myszki" },
+                    { 5, null, "komputery.png", "Klawiatury" }
                 });
 
             migrationBuilder.InsertData(
@@ -275,10 +272,10 @@ namespace PowerON.Migrations
                 columns: new[] { "ItemId", "DateAdded", "Description", "GenreId", "ImageFileName", "IsBestseller", "IsHidden", "ItemName", "Price" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description", 1, "1.png", true, false, "ItemNAme coś tam", 99.0m },
-                    { 2, new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description1", 1, "1.png", true, false, "ItemNAme coś tam1", 44.0m },
-                    { 3, new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description2", 2, "1.png", false, false, "ItemNAme coś tam2", 66m },
-                    { 4, new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description3", 2, "1.png", false, false, "ItemNAme coś tam3", 77m }
+                    { 1, new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description", 1, "1.png", true, false, "ItemNAme coś tam", 99.0m },
+                    { 2, new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description1", 1, "1.png", true, false, "ItemNAme coś tam1", 44.0m },
+                    { 3, new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description2", 2, "1.png", false, false, "ItemNAme coś tam2", 66m },
+                    { 4, new DateTime(2019, 7, 4, 0, 0, 0, 0, DateTimeKind.Local), "Najlepszy bo Description3", 2, "1.png", false, false, "ItemNAme coś tam3", 77m }
                 });
 
             migrationBuilder.CreateIndex(
@@ -336,9 +333,9 @@ namespace PowerON.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_ApplicationUserId",
+                name: "IX_Orders_UserId",
                 table: "Orders",
-                column: "ApplicationUserId");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

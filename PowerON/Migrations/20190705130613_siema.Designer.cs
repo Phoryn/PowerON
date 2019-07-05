@@ -10,8 +10,8 @@ using PowerON.DAL;
 namespace PowerON.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20190626094927_Initializer")]
-    partial class Initializer
+    [Migration("20190705130613_siema")]
+    partial class siema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -202,8 +202,6 @@ namespace PowerON.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("TestColumnDuda");
-
                     b.HasKey("GenreId");
 
                     b.ToTable("Genres");
@@ -274,7 +272,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 1,
-                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description",
                             GenreId = 1,
                             ImageFileName = "1.png",
@@ -286,7 +284,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 2,
-                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description1",
                             GenreId = 1,
                             ImageFileName = "1.png",
@@ -298,7 +296,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 3,
-                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description2",
                             GenreId = 2,
                             ImageFileName = "1.png",
@@ -310,7 +308,7 @@ namespace PowerON.Migrations
                         new
                         {
                             ItemId = 4,
-                            DateAdded = new DateTime(2019, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateAdded = new DateTime(2019, 7, 5, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Najlepszy bo Description3",
                             GenreId = 2,
                             ImageFileName = "1.png",
@@ -331,8 +329,6 @@ namespace PowerON.Migrations
                         .IsRequired()
                         .HasMaxLength(150);
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<string>("CodeAndCity")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -348,7 +344,7 @@ namespace PowerON.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<string>("LastNAme")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(150);
 
@@ -365,7 +361,7 @@ namespace PowerON.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -376,9 +372,7 @@ namespace PowerON.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AlbumId");
-
-                    b.Property<int?>("ItemId");
+                    b.Property<int>("ItemId");
 
                     b.Property<int>("OrderId");
 
@@ -451,16 +445,17 @@ namespace PowerON.Migrations
 
             modelBuilder.Entity("PowerON.Models.Order", b =>
                 {
-                    b.HasOne("PowerON.Models.ApplicationUser")
+                    b.HasOne("PowerON.Models.ApplicationUser", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PowerON.Models.OrderItem", b =>
                 {
                     b.HasOne("PowerON.Models.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("PowerON.Models.Order", "Order")
                         .WithMany("OrderItems")

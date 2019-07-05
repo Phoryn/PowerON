@@ -11,11 +11,6 @@ namespace PowerON.Models
 {
     public class ApplicationUser : IdentityUser
     {
-
-        
-        public virtual ICollection<Order> Orders { get; set; }
-        
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -31,7 +26,7 @@ namespace PowerON.Models
         [EmailAddress(ErrorMessage = "Błędny format adresu e-mail.")]
         public override string Email { get; set; }
 
-
+        public ICollection<Order> Orders { get; set; }
 
 
     }

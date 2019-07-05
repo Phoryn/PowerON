@@ -25,19 +25,23 @@ namespace PowerON.Controllers
     {
 
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly StoreContext _db;
+
         //private IMailService mailService;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
 
 
         public ManageController(SignInManager<ApplicationUser> signInManager,
-                                UserManager<ApplicationUser> userManager
+                                UserManager<ApplicationUser> userManager,
+                                StoreContext context
                                 //IMailService mailService,
                                 )
         {
             //this.mailService = mailService;
             this._signInManager = signInManager;
             this._userManager = userManager;
+            this._db = context;
         }
 
         public enum ManageMessageId
@@ -292,58 +296,58 @@ namespace PowerON.Controllers
 
 
 
-        //public ActionResult OrdersList()
-        //{
-        //    bool isAdmin = User.IsInRole("Admin");
-        //    ViewBag.UserIsAdmin = isAdmin;
+        public ActionResult OrdersList()
+        {
+            bool isAdmin = User.IsInRole("Admin");
+            ViewBag.UserIsAdmin = isAdmin;
+            IEnumerable<Order> userOrders;
 
-        //    IEnumerable<Order> userOrders;
+            if (isAdmin)
+            {
+                userOrders = _db.Orders.Include("OrderItems").
+                    OrderByDescending(o => o.DateCreated).ToArray();
+            }
+            else
+            {
+                var userdId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //userOrders = _db.Orders.Where(o => o.UserId == userdId).Include("OrderItems").
+                //    OrderByDescending(o => o.DateCreated).ToArray();
+                userOrders = _db.Orders.Where(o => o.UserId == userdId).
+                    Include(z => z.OrderItems).ThenInclude(w => w.Item).ToArray();
+            }
+            return View(userOrders);
 
-        //    // For admin users - return all orders
-        //    if (isAdmin)
-        //    {
-        //        userOrders = _db.Orders.Include("OrderItems").
-        //            OrderByDescending(o => o.DateCreated).ToArray();
-        //    }
-        //    else
-        //    {
-        //        var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //        userOrders = _db.Orders.Where(o => o.UserId == userId).Include("OrderItems").
-        //            OrderByDescending(o => o.DateCreated).ToArray();
-        //    }
-
-        //    return View(userOrders);
-        //}
+        }
 
         //[HttpPost]
         //[Authorize(Roles = "Admin")]
-        //public OrderState ChangeOrderState(Order order)
-        //{
-        //    Order orderToModify = _db.Orders.Find(order.OrderId);
-        //    orderToModify.OrderState = order.OrderState;
-        //    _db.SaveChanges();
+        public OrderState ChangeOrderState(Order order)
+        {
+            Order orderToModify = _db.Orders.Find(order.OrderId);
+            orderToModify.OrderState = order.OrderState;
+            _db.SaveChanges();
 
-        //    if (orderToModify.OrderState == OrderState.Shipped)
-        //    {
-        //        // Schedule confirmation
-        //        //string url = Url.Action("SendStatusEmail", "Manage", new { orderid = orderToModify.OrderId, lastname = orderToModify.LastName }, Request.Url.Scheme);
+            //if (orderToModify.OrderState == OrderState.Shipped)
+            //{
+            //    Schedule confirmation
+            //    string url = Url.Action("SendStatusEmail", "Manage", new { orderid = orderToModify.OrderId, lastname = orderToModify.LastName }, Request.Url.Scheme);
 
-        //        //BackgroundJob.Enqueue(() => Helpers.CallUrl(url));
+            //    BackgroundJob.Enqueue(() => Helpers.CallUrl(url));
 
-        //        //IMailService mailService = new HangFirePostalMailService();
-        //        //mailService.SendOrderShippedEmail(orderToModify);
+            //    IMailService mailService = new HangFirePostalMailService();
+            //    mailService.SendOrderShippedEmail(orderToModify);
 
-        //        //mailService.SendOrderShippedEmail(orderToModify);
+            //    mailService.SendOrderShippedEmail(orderToModify);
 
-        //        //dynamic email = new Postal.Email("OrderShipped");
-        //        //email.To = orderToModify.Email;
-        //        //email.OrderId = orderToModify.OrderId;
-        //        //email.FullAddress = string.Format("{0} {1}, {2}, {3}", orderToModify.FirstName, orderToModify.LastName, orderToModify.Address, orderToModify.CodeAndCity);
-        //        //email.Send();
-        //    }
+            //    dynamic email = new Postal.Email("OrderShipped");
+            //    email.To = orderToModify.Email;
+            //    email.OrderId = orderToModify.OrderId;
+            //    email.FullAddress = string.Format("{0} {1}, {2}, {3}", orderToModify.FirstName, orderToModify.LastName, orderToModify.Address, orderToModify.CodeAndCity);
+            //    email.Send();
+            //}
 
-        //    return order.OrderState;
-        //}
+            return order.OrderState;
+        }
 
         //[AllowAnonymous]
         //public ActionResult SendStatusEmail(int orderid, string lastname)
