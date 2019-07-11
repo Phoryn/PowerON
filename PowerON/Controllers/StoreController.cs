@@ -29,6 +29,9 @@ namespace PowerON.Controllers
         public IActionResult List(string genrename)
         {
             var genre = _db.Genres.Include("Items").Where(g => g.Name.ToUpper() == genrename.ToUpper()).Single();
+
+            //var items = genre.Items.Where(a => !a.IsHidden);
+
             return View(genre);
         }
 

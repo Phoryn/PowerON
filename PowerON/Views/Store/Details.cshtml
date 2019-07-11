@@ -50,6 +50,11 @@
                     Bezpłatna przesyłka. Realizacja w ciągu 24 godzin.
                 </div>
 
+                @if(User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a href="@Url.Action("AddProduct", "Manage", new { itemId = Model.ItemId })" style="margin-top: 20px; font-weight: bold; display: block;">Edytuj</a>
+                }
+
             </div>
         </section>
     </div>

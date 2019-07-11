@@ -46,7 +46,7 @@ namespace PowerON
                     .AddDefaultTokenProviders()
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<StoreContext>();
-
+            
             
 
             services.AddMemoryCache();
@@ -62,7 +62,7 @@ namespace PowerON
                 //options.AuthorizationEndpoint = "Facebook";
 
             });
-
+            
             //session
             services.AddDistributedMemoryCache();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -101,13 +101,14 @@ namespace PowerON
             }
             
 
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
 
+            
 
 
             app.UseMvc(routes =>

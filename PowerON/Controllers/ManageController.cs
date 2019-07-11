@@ -7,11 +7,15 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Protocols;
 using Newtonsoft.Json;
 using PowerON.DAL;
 using PowerON.Infrastructure;
@@ -26,6 +30,8 @@ namespace PowerON.Controllers
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly StoreContext _db;
+        private readonly IConfiguration configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         //private IMailService mailService;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -34,7 +40,9 @@ namespace PowerON.Controllers
 
         public ManageController(SignInManager<ApplicationUser> signInManager,
                                 UserManager<ApplicationUser> userManager,
-                                StoreContext context
+                                StoreContext context,
+                                IConfiguration iConfig,
+                                IHostingEnvironment hostingEnvironment
                                 //IMailService mailService,
                                 )
         {
@@ -42,6 +50,8 @@ namespace PowerON.Controllers
             this._signInManager = signInManager;
             this._userManager = userManager;
             this._db = context;
+            this.configuration = iConfig;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         public enum ManageMessageId
@@ -400,99 +410,110 @@ namespace PowerON.Controllers
         //    return StatusCode(200);
         //}
 
-        //[Authorize(Roles = "Admin")]
-        //public ActionResult AddProduct(int? itemId, bool? confirmSuccess)
-        //{
-        //    if (itemId.HasValue)
-        //        ViewBag.EditMode = true;
-        //    else
-        //        ViewBag.EditMode = false;
+        [Authorize(Roles = "Admin")]
+        public ActionResult AddProduct(int? itemId, bool? confirmSuccess)
+        {
+            if (itemId.HasValue)
+                ViewBag.EditMode = true;
+            else
+                ViewBag.EditMode = false;
 
-        //    var result = new EditProductViewModel();
-        //    var genres = _db.Genres.ToArray();
-        //    result.Genres = genres;
-        //    result.ConfirmSuccess = confirmSuccess;
+            var result = new EditProductViewModel();
+            var genres = _db.Genres.ToList();
+            result.Genres = genres;
+            result.ConfirmSuccess = confirmSuccess;
 
-        //    Item a;
+            Item a;
 
-        //    if (!itemId.HasValue)
-        //    {
-        //        a = new Item();
-        //    }
-        //    else
-        //    {
-        //        a = _db.Items.Find(itemId);
-        //    }
+            if (!itemId.HasValue)
+            {
+                a = new Item();
+            }
+            else
+            {
+                a = _db.Items.Find(itemId);
+            }
 
-        //    result.Item = a;
+            result.Item = a;
 
-        //    return View(result);
-        //}
+            return View(result);
+        }
 
-        //[HttpPost]
-        //public ActionResult AddProduct(HttpPostedFileBase file, EditProductViewModel model)
-        //{
-        //    if (model.Item.ItemId > 0)
-        //    {
-        //        // Saving existing entry
+        [HttpPost]
+        public async Task<ActionResult> AddProduct(IFormFile file, EditProductViewModel model)
+        {
+            if (model.Item.ItemId > 0)
+            {
+                // Saving existing entry
 
-        //        _db.Entry(model.Item).State = EntityState.Modified;
-        //        _db.SaveChanges();
-        //        return RedirectToAction("AddProduct", new { confirmSuccess = true });
-        //    }
-        //    else
-        //    {
-        //        // Creating new entry
+                _db.Entry(model.Item).State = EntityState.Modified;
+                _db.SaveChanges();
+                return RedirectToAction("AddProduct", new { confirmSuccess = true });
+            }
+            else
+            {
+                // Creating new entry
 
-        //        var f = Request.Form;
-        //        // Verify that the user selected a file
-        //        if (file != null && file.ContentLength > 0)
-        //        {
-        //            // Generate filename
+                var f = Request.Form;
+                // Verify that the user selected a file
+                if (file != null && file.Length > 0)
+                {
+                    // Generate filename
 
-        //            var fileExt = Path.GetExtension(file.FileName);
-        //            var filename = Guid.NewGuid() + fileExt;
+                    var fileExt = Path.GetExtension(file.FileName);
+                    var filename = Guid.NewGuid() + fileExt;
+                    //////
+                    string webRootPath = _hostingEnvironment.WebRootPath;
+                    //string contentRootPath = _hostingEnvironment.ContentRootPath;
 
-        //            var path = Path.Combine(IServer.MapPath(AppConfig.PhotosFolderRelative), filename);
-        //            file.SaveAs(path);
+                    var path = Path.Combine(webRootPath + "\\" + configuration.GetValue<string>("MyPathDuda:Path"), filename);
+                    //////
 
-        //            // Save info to DB
-        //            model.Item.ImageFileName = filename;
-        //            model.Item.DateAdded = DateTime.Now;
 
-        //            _db.Entry(model.Item).State = EntityState.Added;
-        //            _db.SaveChanges();
+                    //var path = Path.Combine(configuration.GetValue<string>("MyPathDuda:Path"), filename);
+                    //file.Save(path);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
 
-        //            return RedirectToAction("AddProduct", new { confirmSuccess = true });
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError("", "Nie wskazano pliku.");
-        //            var genres = _db.Genres.ToArray();
-        //            model.Genres = genres;
-        //            return View(model);
-        //        }
-        //    }
+                        // Save info to DB
+                    model.Item.ImageFileName = filename;
+                    model.Item.DateAdded = DateTime.Now;
 
-        //}
+                    _db.Entry(model.Item).State = EntityState.Added;
+                    _db.SaveChanges();
 
-        //public ActionResult HideProduct(int itemId)
-        //{
-        //    var album = _db.Items.Find(itemId);
-        //    album.IsHidden = true;
-        //    _db.SaveChanges();
+                    return RedirectToAction("AddProduct", new { confirmSuccess = true });
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Nie wskazano pliku.");
+                    var genres = _db.Genres.ToArray();
+                    model.Genres = genres;
+                    return View(model);
+                }
+            }
 
-        //    return RedirectToAction("AddProduct", new { confirmSuccess = true });
-        //}
+        }
 
-        //public ActionResult UnhideProduct(int itemId)
-        //{
-        //    var album = _db.Items.Find(itemId);
-        //    album.IsHidden = false;
-        //    _db.SaveChanges();
+        public ActionResult HideProduct(int itemId)
+        {
+            var album = _db.Items.Find(itemId);
+            album.IsHidden = true;
+            _db.SaveChanges();
 
-        //    return RedirectToAction("AddProduct", new { confirmSuccess = true });
-        //}
+            return RedirectToAction("AddProduct", new { confirmSuccess = true });
+        }
+
+        public ActionResult UnhideProduct(int itemId)
+        {
+            var album = _db.Items.Find(itemId);
+            album.IsHidden = false;
+            _db.SaveChanges();
+
+            return RedirectToAction("AddProduct", new { confirmSuccess = true });
+        }
 
 
     }

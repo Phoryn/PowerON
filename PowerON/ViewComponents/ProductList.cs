@@ -19,7 +19,7 @@ namespace PowerON.ViewComponents
         public IViewComponentResult Invoke(string genre)
         {
             var genres = _context.Genres.Include("Items").Where(g => g.Name.ToUpper() == genre.ToUpper()).Single();
-            var albums = genres.Items.ToList();
+            var albums = genres.Items.Where(a => !a.IsHidden).ToList();
             return View(albums);
         }
     }

@@ -1,0 +1,107 @@
+﻿@model PowerON.ViewModel.EditProductViewModel
+@{
+    ViewData["Title"] = "AddProduct";
+    Layout = "~/Views/Shared/_ManageLayout.cshtml";
+}
+
+<hr />
+
+<h2 class="manageHeader">Edycja produktu</h2>
+
+<div>
+    @if (Model.ConfirmSuccess.HasValue && Model.ConfirmSuccess.Value)
+    {
+        <div style="text-align:center; margin:50px;">
+            Pomyślnie wprowadzono zmianę!
+        </div>
+    }
+    @using (Html.BeginForm("AddProduct", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="error-summary-centered">
+            @Html.ValidationSummary()
+        </div>
+
+        @Html.HiddenFor(o => o.Item.ItemId)
+        @Html.HiddenFor(o => o.Item.DateAdded)
+        @Html.HiddenFor(o => o.Item.ImageFileName)
+
+        
+        <div style="text-align:center;">
+            <table id="albumedit-address-table">
+                <tr>
+                    <td>@Html.LabelFor(o => o.Item.ItemName, "Nazwa:")</td>
+                    <td>@Html.TextBoxFor(o => o.Item.ItemName)</td>
+                    <td>@Html.ValidationMessageFor(o => o.Item.ItemName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(o => o.Item.Description, "Opis:")</td>
+                    <td>@Html.TextAreaFor(o => o.Item.Description, 10, 10, "")</td>
+                    <td>@Html.ValidationMessageFor(o => o.Item.Description)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(o => o.Genres, "Kategoria:")</td>
+                    <td>@Html.DropDownListFor(m => m.Item.GenreId, new SelectList(Model.Genres, "GenreId", "Name", Model.Genres.First().GenreId))</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(o => o.Item.Price, "Cena:")</td>
+                    <td>@Html.TextBoxFor(o => o.Item.Price)</td>
+                    <td>@Html.ValidationMessageFor(o => o.Item.Price)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(o => o.Item.IsBestseller, "Bestseller:")</td>
+                    <td>@Html.CheckBoxFor(o => o.Item.IsBestseller)</td>
+                    <td></td>
+                </tr>
+
+                @if (ViewBag.EditMode == null || !ViewBag.EditMode)
+                {
+                    <tr>
+                        <td colspan="3">
+
+                            <input type="file" name="file" />
+
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td style="text-align:left;">
+
+                        @if (ViewBag.EditMode)
+                        {
+                            if (Model.Item.IsHidden)
+                            {
+
+                                <a href="@Url.Action("UnhideProduct", "Manage", new { itemId = Model.Item.ItemId })" style="display: block; margin-top: 15px; font-weight: bold;">
+                                    Przywróć
+                                </a>
+                            }
+                            else
+                            {
+
+                                <a href="@Url.Action("HideProduct", "Manage", new { itemId = Model.Item.ItemId})" style="display: block; margin-top: 15px; font-weight: bold;">
+                                    Usuń
+                                </a>
+                            }
+                        }
+
+                    </td>
+
+
+                    <td style="text-align:right;">
+
+                        <input type="submit" value="Zapisz" class="submitLink" style="height: 40px; margin-right: 0px; margin-top: 30px; font-weight: bold;" />
+
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+    }
+</div>
+

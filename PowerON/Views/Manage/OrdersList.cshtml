@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<PowerON.Models.Order>
 @{
-    ViewData["Title"] = "OrdersList";
+    ViewBag.Title = "OrdersList";
     Layout = "~/Views/Shared/_ManageLayout.cshtml";
 }
 
+
 <div>
+
     <hr />
 
     <h2 class="manageHeader">Twoje zamówienia</h2>
@@ -13,104 +15,106 @@
 
         @if (Model.Any())
         {
-            @foreach (var order in Model)
-            {
-        <table id="orders-table">
-            <tr @if (order.OrderState == PowerON.Models.OrderState.New) { <text> class="newOrder" </text> }>
-                <td>
-                    <strong>Nr zamówienia: </strong>@order.OrderId
-                </td>
-                <td>
-                    <strong>Data: </strong> @order.DateCreated.ToString("dd-MM-yyyy")
-                </td>
-                <td>
-                    <strong>Stan: </strong><br />
 
-                    @if (ViewBag.UserIsAdmin)
-                    {
-                        using (Html.BeginForm("ChangeOrderState", "Manage"))
-                        {
-                            Html.HiddenFor(o => order.OrderId);
+            <table id="orders-table">
 
-                                           <div class="orderstateddl">
+                @foreach (var order in Model)
+                {
+                    <tr @if (order.OrderState == PowerON.Models.OrderState.New) { <text> class="newOrder" </text> }>
+                        <td>
+                            <strong>Nr zamówienia: </strong>@order.OrderId
+                        </td>
+                        <td>
+                            <strong>Data: </strong>
+                            @order.DateCreated.ToString("dd-MM-yyyy")
+                        </td>
+                        <td>
+                            <strong>Stan: </strong><br />
 
-                                               @{
-                                                   @Html.DropDownListFor(r => order.OrderState, 
-                                                                        Html.GetEnumSelectList(typeof(PowerON.Models.OrderState)), 
-                                                                        new { @class = "orderstateddl" })
-                                               }
-
-                                           </div>
-                        }
-                    }
-                    else
-                    {
-                        @Html.DisplayFor(o => order.OrderState)
-                    }
-
-                </td>
-
-                <td>
-                    <strong>Dane wysyłkowe:</strong><br />
-                    @order.FirstName @order.LastName <br />
-                    @order.Address<br />
-                    @order.CodeAndCity<br />
-                </td>
-                <td>
-                    <strong>Uwagi: </strong><br />
-                    @order.Comment
-                </td>
-                <td>
-                    <strong>Łączny koszt: </strong> @order.TotalPrice zł
-                </td>
-            </tr>
-
-            <tr>
-                <td colspan="6">
-                    <section>
-                        <ul class="ThreeColumnsStaticCoversList large-cover-list-bottom">
-
-                            @foreach (var orderItem in order.OrderItems)
+                            @if (ViewBag.UserIsAdmin)
                             {
-                                <li>
-                                    <article>
-                                        <a class="productdetailslink" href="@Url.Action("Details", "Store", new { id = orderItem.ItemId })">
-                                            <img class="album-cover" src="@Url.Content("~/images/items/" + orderItem.Item.ImageFileName)" />
-                                            <h1>
-                                                @orderItem.Item.ItemName<br />
-                                                <strong>sztuk: @orderItem.Quantity, łącznie: @(orderItem.Quantity * @orderItem.UnitPrice)  zł</strong>
-                                            </h1>
-                                        </a>
-                                    </article>
-                                </li>
+                                using (Html.BeginForm("ChangeOrderState", "Manage"))
+                                {
+                                    @Html.HiddenFor(o => order.OrderId);
+                                    @Html.DropDownListFor(r => order.OrderState,
+                                        Html.GetEnumSelectList(typeof(PowerON.Models.OrderState)),
+                                        new { @class = "orderstateddl" })
+                                }
                             }
-                        </ul>
-                    </section>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-        </table>
-            }
+                            else
+                            {
+                                @Html.DisplayFor(o => order.OrderState)
+                            }
 
+                        </td>
+
+                        <td>
+                            <strong>Dane wysyłkowe:</strong><br />
+                            @order.FirstName @order.LastName<br />
+                            @order.Address<br />
+                            @order.CodeAndCity<br />
+                        </td>
+                        <td>
+                            <strong>Uwagi: </strong><br />
+                            @order.Comment
+                        </td>
+                        <td>
+                            <strong>Łączny koszt:</strong> @order.TotalPrice zł
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <section>
+                                <ul class="ThreeColumnsStaticCoversList large-cover-list-bottom">
+
+                                    @foreach (var orderItem in order.OrderItems)
+                                    {
+                                        <li>
+                                            <article>
+                                                <a class="productdetailslink" href="@Url.Action("Details", "Store", new { id = orderItem.ItemId })">
+                                                    <img class="album-cover" src="@Url.Content("~/images/items/" + orderItem.Item.ImageFileName)" />
+                                                    <h1>
+                                                        @orderItem.Item.ItemName<br />
+                                                        <strong>sztuk: @orderItem.Quantity, łącznie: @(orderItem.Quantity * @orderItem.UnitPrice)  zł</strong>
+                                                    </h1>
+                                                </a>
+                                            </article>
+                                        </li>
+                                    }
+
+                                </ul>
+
+                            </section>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                    </tr>
+
+                    <!-- Next order -->
+
+                }
+
+
+            </table>
         }
         else
         {
-            <div style="text-align:center;margin-top:50px;margin-bottom:50px;">
+            <div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
                 Brak zamówień.
             </div>
         }
     </div>
 
 
+
 </div>
 
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
 
 <script>
-
     $(".orderstateddl").on('change', function (e) {
+        //e.preventDefault();
 
         var f = $(this.form);
         var tr = f.closest("tr");
@@ -118,18 +122,12 @@
         var action = f.attr("action");
         var serializedForm = f.serialize();
         $.post(action, serializedForm).done(function (data) {
-            if (data == '@PowerON.Models.OrderState.New.ToString()')
-            {
-                tr.addClass("newOrder");
+            if (data == '@PowerON.Models.OrderState.New.ToString()') {
+                tr.addClass("newOrder")
             }
-            else
-            {
+            else {
                 tr.removeClass("newOrder");
             }
-
         });
-
-
     });
-
-</script>
+    </script>
